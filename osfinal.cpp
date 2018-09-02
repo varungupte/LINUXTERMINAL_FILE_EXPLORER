@@ -319,20 +319,52 @@ else if(ch==0x0A)
             }
             else
             {
+
             
             clearScreen();
-            back.push(p);
-            p=p+'/';
-            p=p+lis[y]->d_name;
-            inde=0;
-            lsfile(p,inde);
-            y=coun;
-            printf("\033[%d;1H\n",y);
-            //cout<<"####"<<endl;
-            fflush(stdout);
+            
+            //p=p+'/';
+            //p=p+lis[y]->d_name;
+            struct stat s; 
+            //k=string(lis[i]->d_name);
+            string sd;
+            sd=p+'/'+string(lis[y]->d_name);
+         
+          if( stat(sd.c_str(),&s) == 0)
+          {
+              
+              if( s.st_mode & S_IFDIR )
+              {
+                        back.push(p);          
+                        inde=0;
+                        p=p+'/';
+                        p=p+lis[y]->d_name;
+                        lsfile(p,inde);
+                        y=coun;
+                        printf("\033[%d;1H\n",y);
+                        fflush(stdout);
+              
+              }
+              if( s.st_mode & S_IFREG )
+              {         
+                        //cout<<sd;
+                        pid_t pid=fork();
+                        if(pid==0){
+                        execl("/usr/bin/xdg-open","xdg-open",lis[y]->d_name,NULL);
+                        exit(0);}
+                        else{
+                        lsfile(p,inde);
+                        y=coun;
+                        printf("\033[%d;1H\n",y);
+                        fflush(stdout);}
+                 
+              }
+              
+            
+            
             }
             
-        }
+        }}
 else if(ch=='h'||ch=='H')
 {
             clearScreen();
