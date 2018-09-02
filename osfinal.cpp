@@ -33,6 +33,7 @@ int readch();
 int coun=0;
 int inde=0;
 int y;
+int co=0;
 string p;
 
 string getString(char x)
@@ -78,9 +79,9 @@ for(i=0;i<y;i++)
 printf("\t");
 
 }
-int lsfile(string c,int inde)
+int lsfile(string c,int ind)
 {    //clear();
-    coun=inde;
+    coun=ind;
     struct dirent *de;  
     DIR *dr = opendir(c.c_str());
     if (dr == NULL)  
@@ -90,7 +91,7 @@ int lsfile(string c,int inde)
     }
    unsigned long i=0;
    
-   int co = scandir(c.c_str(), &lis, NULL, alphasort);
+co = scandir(c.c_str(), &lis, NULL, alphasort);
    
      if( co < 0 ){
          perror("Couldn't open the directory");
@@ -98,7 +99,7 @@ int lsfile(string c,int inde)
      }
      //coun=co;
      struct stat fileStat;
-    for( int i=inde; i<inde+10;i++){
+    for( int i=inde; i<ind+15;i++){
     //printf("%s %d\n",lis[i]->d_name,i);
     if(i<co) {   
     string k;
@@ -144,7 +145,7 @@ int lsfile(string c,int inde)
      
      fflush(stdout);
      }}
-    
+    coun=coun-1;
     closedir(dr);    
     return 0;
 }
@@ -181,7 +182,7 @@ if (getcwd(cwd,sizeof(cwd)) != NULL) {
        return 1;
    }
 lsfile(p,0);
- y=coun-1;
+ y=coun;
  printf("\033[%d;1H\n",y);
  fflush(stdout);
 
@@ -199,23 +200,49 @@ if(ch==27)
 if(ch==65)
 {
             printf("\033[%dA",1);
+            //cout<<y;
             fflush(stdout);
-            y=y-1;
+            
+            if(y==inde&&inde!=0)
+            {
+            clearScreen();  
+            inde=inde-1;  
+            lsfile(p,inde);
+            y=coun;
+            printf("\033[%d;1H\n",y-inde);
+            fflush(stdout);
+            }
+            else{
+            y=y-1;}
+        
 }
 else if(ch==66)
 {           
             //pos();
             printf("\033[%dB",1);
             fflush(stdout);
-            if(y==coun)
+            if(y<co||y-inde+1<=15)
+            {
+            if(y==coun&&y-inde+1==15)
             {
             clearScreen();    
-            lsfile(p,inde+1);
-            fflush(stdout);
+            inde=inde+1;
+            lsfile(p,inde);
             y=coun;
+            printf("\033[14;1H\n");
             }
-           else{ y=y+1;}
-
+            else if(y==co-1)
+            {
+               printf("\033[%d;1H\n",y-inde);
+               fflush(stdout);
+            }
+            else{
+           y=y+1;}
+       }
+           // else
+           // {
+           //   printf("\033[15;1H\n",y);
+           // }
             // pos();
             // int kk=w.ws_row;
             // kk=kk-1;
@@ -227,8 +254,9 @@ else if(ch==68)
             clearScreen();
             fo.push(p);
             p=back.top();
-            lsfile(p,0);
-             y=coun-1;
+            inde=0;
+            lsfile(p,inde);
+             y=coun;
              printf("\033[%d;1H\n",y);
              fflush(stdout);
              back.pop();
@@ -242,8 +270,9 @@ else if(ch==68)
             clearScreen();
             //forward.push(p);
             p=fo.top();
-            lsfile(p,0);
-            y=coun-1;
+           inde=0;
+            lsfile(p,inde);
+            y=coun;
              printf("\033[%d;1H\n",y);
              fflush(stdout);
             fo.pop();
@@ -255,35 +284,47 @@ else if(ch==68)
 else if(ch==0x0A)
         {
             string s=lis[y]->d_name;
+            inde=0;
+            //string k="27"+".";
              if(s.compare("..")==0){
             clearScreen();
              back.push(p);
              size_t found = p.find_last_of("/\\");
              p=p.substr(0,found);
-            lsfile(p,0);
-             y=coun-1;
+             inde=0;
+            lsfile(p,inde);
+             y=coun;
              printf("\033[%d;1H\n",y);
              fflush(stdout);
             }
             else if(s.back()=='.')
             {
-           //cout<<p;    
+           
             clearScreen();
+           //  cout<<p;    
+           // fflush(stdout);
              back.push(p);
-            lsfile(p,0);
-            y=coun-1;
+             inde=0;
+            lsfile(p,inde);
+            y=coun;
              printf("\033[%d;1H\n",y);
+             //cout<<p<<"%%5";    
+           fflush(stdout);
              fflush(stdout);
             }
             else
             {
+
             clearScreen();
+
             back.push(p);
             p=p+'/';
             p=p+lis[y]->d_name;
-            lsfile(p,0);
-            y=coun-1;
+             inde=0;
+            lsfile(p,inde);
+            y=coun;
              printf("\033[%d;1H\n",y);
+           
              fflush(stdout);
             }
             
@@ -292,8 +333,9 @@ else if(ch=='h'||ch=='H')
 {
             clearScreen();
             p=home;
-            lsfile(p,0);
-            y=coun-1;
+             inde=0;
+            lsfile(p,inde);
+            y=coun;
              printf("\033[%d;1H\n",y);
              fflush(stdout);
 }
@@ -305,8 +347,9 @@ else if(ch==8||ch==127)
              size_t found = p.find_last_of("/\\");
              p=p.substr(0,found);
              clearScreen();
-             lsfile(p,0);
-             y=coun-1;
+              inde=0;
+            lsfile(p,inde);
+             y=coun;
              printf("\033[%d;1H\n",y);
              fflush(stdout);
         }
@@ -328,8 +371,9 @@ if(f[0]==27)
 {
             tcsetattr(0, TCSANOW, &initial2);
             clearScreen();
-            lsfile(p,0);
-            y=coun-1;
+            inde=0;
+            lsfile(p,inde);
+            y=coun;
              printf("\033[%d;1H\n",y);
              fflush(stdout);
             break;
@@ -370,22 +414,24 @@ else
 
          }
          else if(vv[0]=="search")
-         {
+         {  
             string st=vv[1];
             clearScreen();
             tcsetattr(0, TCSANOW, &initial2);
             se(p,st);
-            ch=readch();
+             fflush(stdout);
+            read(0,&ch,1);
              //fflush(stdout);
             if(ch==8||ch==127){
-                cout<<"cool1";
+                //cout<<"cool1";
              clearScreen();
-             lsfile(p,0);
-             y=coun-1;
+              inde=0;
+              lsfile(p,inde);
+              y=coun;
              printf("\033[%d;1H\n",y);
              fflush(stdout);
          }
-             cout<<"cool12";
+             //cout<<"cool12";
             break;
          }
          else if(vv[0]=="copy")
@@ -415,9 +461,11 @@ else
          else if(vv[0]=="rename")
          {
          	int result= rename(vv[1].c_str(),vv[2].c_str());
-         	clearScreen();    
-            lsfile(home,0);
-            y=coun-1;
+         	clearScreen();   
+             inde=0;
+            lsfile(home,inde); 
+            //lsfile(,0);
+            y=coun;
              printf("\033[%d;1H\n",y);
              fflush(stdout);
             printf("\033[%d;1H\n",kk);
@@ -483,17 +531,19 @@ else
              if(vv[1]=="/")
              {
             clearScreen();    
-            lsfile(home,0);
+            inde=0;
+            lsfile(p,inde);
             p=home;
-            y=coun-1;
+            y=coun;
              printf("\033[%d;1H\n",y);
              fflush(stdout);
              }
              else if(vv[1]==".")
              {
             clearScreen();    
-            lsfile(p,0);
-            y=coun-1;
+            inde=0;
+            lsfile(p,inde);
+            y=coun;
              printf("\033[%d;1H\n",y);
              fflush(stdout);
              }
@@ -501,8 +551,9 @@ else
              {
             p=p+"/"+vv[1];
             clearScreen();
-            lsfile(p,0);
-            y=coun-1;
+           inde=0;
+            lsfile(p,inde);
+            y=coun;
              printf("\033[%d;1H\n",y);
              fflush(stdout);
               }
