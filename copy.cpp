@@ -89,7 +89,7 @@ if ( (fdSrc=open(a.c_str(),O_RDONLY))<0 )
 }
 int copyDir(string source, string destination)
 {
-    cout<<source<<"@@@@@@"<<destination<<"####"<<endl;
+    //cout<<source<<"@@@@@@"<<destination<<"####"<<endl;
     struct dirent *de;  
     //cout<<source<<"----"<<destination<<endl;
     

@@ -17,6 +17,7 @@ using namespace std;
 stack<string> back;
 stack<string> fo;
 void pos();
+map<string,string> m;
 //int com=0;
 void gotoxy(int x,int y);
 #define clear() printf("\033[H\033[J")
@@ -523,17 +524,33 @@ else
                                  if(vv[2][0]=='~'&&vv[2][1]=='/')
                                    {
                                        //size_t found = vv[2].find("~");
-                                       string kk=vv[2].substr(1);
+                                       string kk=vv[2].substr(2);
                                        c=home+"/"+kk;
 
                                    }
-                           else
-                           {
-                            c=home+"/"+vv[2];
-                           }
-                           string g=home+"/"+vv[1];
-                           //cout<<c<<" "<<g;
-                                copyDir(g,c);
+                                 else
+                                   {
+                                    c=home+"/"+vv[2];
+                                   }
+                                string g=home+"/"+vv[1];
+                                string kkk;
+                                size_t found=vv[1].find("/");
+                                if (found!=std::string::npos)
+                                {
+                                           size_t found = vv[1].find_last_of("/\\");
+                                           kkk=vv[1].substr(found+1,vv[1].length()-1);
+                                }
+                                else
+                                {
+                                 kkk=vv[1];
+                                }
+                                kkk=c+"/"+kkk;
+                                int gd= mkdir(kkk.c_str(),S_IRUSR|S_IWUSR|S_IXUSR);
+                                //destination=kkk;
+                                copyDir(g,kkk);
+                               // del(vv[1]);
+                          
+                               // copyDir(g,c);
                             }
                             else if( s.st_mode & S_IFREG )
                             {
@@ -571,8 +588,51 @@ else
                         if( stat(vv[1].c_str(),&s) == 0 )
                         {
                             if(s.st_mode & S_IFDIR )
-                            {
-                                copyDir(vv[1],vv[2]);
+                            {   
+                                // string kkk;
+                                // size_t found=vv[1].find("/");
+                                // if (found!=std::string::npos)
+                                // {
+                                //            size_t found = vv[1].find_last_of("/\\");
+                                //            kkk=vv[1].substr(found+1,vv[1].length()-1);
+                                // }
+                                // else
+                                // {
+                                //  kkk=vv[1];
+                                // }
+                                // kkk=vv[2]+"/"+kkk;
+                                // int gd= mkdir(kkk.c_str(),S_IRUSR|S_IWUSR|S_IXUSR);
+                                // //destination=kkk;
+                                // copyDir(vv[1],kkk);
+                                // del(vv[1]);
+                                string c;
+                                if(vv[2][0]=='~'&&vv[2][1]=='/')
+                                   {
+                                       //size_t found = vv[2].find("~");
+                                       string kk=vv[2].substr(1);
+                                       c=home+"/"+kk;
+
+                                   }
+                                 else
+                                   {
+                                    c=home+"/"+vv[2];
+                                   }
+                                string g=home+"/"+vv[1];
+                                string kkk;
+                                size_t found=vv[1].find("/");
+                                if (found!=std::string::npos)
+                                {
+                                           size_t found = vv[1].find_last_of("/\\");
+                                           kkk=vv[1].substr(found+1,vv[1].length()-1);
+                                }
+                                else
+                                {
+                                 kkk=vv[1];
+                                }
+                                kkk=c+"/"+kkk;
+                                int gd= mkdir(kkk.c_str(),S_IRUSR|S_IWUSR|S_IXUSR);
+                                //destination=kkk;
+                                copyDir(g,kkk);
                                 del(vv[1]);
                             }
                             else if( s.st_mode & S_IFREG )
@@ -679,24 +739,141 @@ else
          }
          else if(vv[0]=="delete_file")
          {
-            del(vv[1]);
-            clearScreen();
+            size_t found = vv[1].find("trash");
+                  if (found!=std::string::npos)
+                                {
+                                           del(vv[1]);
+                                           clearScreen();
               inde=0;
               lsfile(p,inde);
               y=coun;
+              //cout<<kkk<<" "<<cc<<" "<<m[cc];
+              printf("\033[%d;1H\n",kk);
+            fflush(stdout);
+               continue;
+                                }
+     string c,cc,path;
+     if(vv[1][0]=='~'&&vv[1][1]=='/')
+      {
+                                     
+       string kk=vv[1].substr(1);
+        c=home+"/"+kk;
+        // cc=kk;
+        // path=home;
+         }
+         else
+          {
+           c=home+"/"+vv[1];
+           // cc=v[1];
+           }  
+                                            found = c.find_last_of("/\\");
+                                           cc=c.substr(found+1,vv[1].length());
+                                           path=c.substr(0,found);
+                                           m[cc]=path;
+              string jj=home+"/trash";
+              copyFile(c,jj);
+              del(c);
+              clearScreen();
+              inde=0;
+              lsfile(p,inde);
+              y=coun;
+              //cout<<cc<<"33"<<m[cc];
               printf("\033[%d;1H\n",kk);
             fflush(stdout);
          }
          else if(vv[0]=="delete_dir")
          {
-            del(vv[1]);
+               size_t found = vv[1].find("trash");
+                  if (found!=std::string::npos)
+                                {
+                                           del(vv[1]);
+                                           clearScreen();
+              inde=0;
+              lsfile(p,inde);
+              y=coun;
+              //cout<<kkk<<" "<<cc<<" "<<m[cc];
+              printf("\033[%d;1H\n",kk);
+            fflush(stdout);
+               continue;
+                                }
+
+
+             string c,cc,path;
+     if(vv[1][0]=='~'&&vv[1][1]=='/')
+      {
+                                     
+       string kk=vv[1].substr(1);
+        c=home+"/"+kk;
+
+         }
+         else
+          {
+           c=home+"/"+vv[1];
+           }  
+           string kkk;
+                                found=vv[1].find("/");
+                                if (found!=std::string::npos)
+                                {
+                                           found = vv[1].find_last_of("/\\");
+                                           kkk=vv[1].substr(found+1,vv[1].length());
+                                }
+                                else
+                                {
+                                 kkk=vv[1];
+                                }
+                                           found = c.find_last_of("/\\");
+                                           cc=c.substr(found+1,vv[1].length());
+                                           path=c.substr(0,found);
+                                           m[cc]=path;
+                                string jj=home+"/trash/"+kkk;
+                                int g= mkdir(jj.c_str(),S_IRUSR|S_IWUSR|S_IXUSR);
+                                cout<<jj<<" "<<c;
+              copyDir(c,jj);
+              del(c);
             clearScreen();
               inde=0;
               lsfile(p,inde);
               y=coun;
+              //cout<<kkk<<" "<<cc<<" "<<m[cc];
               printf("\033[%d;1H\n",kk);
             fflush(stdout);
          }
+         else if(vv[0]=="restore")
+         {    
+             auto it = m.find(vv[1]);
+             string jj=home+"/trash/"+vv[1];
+              if (it != m.end())
+               {
+                      struct stat s;string c;
+                        if( stat(jj.c_str(),&s) == 0 )
+                        {
+                            if(s.st_mode & S_IFDIR )
+                            {
+                                   string kk=m[vv[1]]+"/"+vv[1];
+                               int g= mkdir(kk.c_str(),S_IRUSR|S_IWUSR|S_IXUSR);
+                               copyFile(jj,kk);
+                               del(jj);
+                               m.erase (it);
+                            }
+                            else if( s.st_mode & S_IFREG )
+                            { 
+                               
+                               copyFile(jj,m[vv[1]]);
+                                   del(jj);
+                                   m.erase (it);
+                            }
+                         }
+               
+               }
+               clearScreen();
+               inde=0;
+               lsfile(p,inde);
+               y=coun;
+               printf("\033[%d;1H\n",kk);
+               fflush(stdout);
+         }
+         
+
          else if(vv[0]=="goto")
          {
              if(vv[1]=="/")
