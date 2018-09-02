@@ -61,8 +61,10 @@ int findLastIndex(string str, char x)
 }
 void clearScreen()
 {
-  const char *CLEAR_SCREEN_ANSI = "\e[1;1H\e[2J";
-  write(STDOUT_FILENO, CLEAR_SCREEN_ANSI, 12);
+  //const char *CLEAR_SCREEN_ANSI = "\e[1;1H\e[2J";
+  //   const char *CLEAR_SCREEN_ANSI = "\033[H\033[J";
+  // write(STDOUT_FILENO, CLEAR_SCREEN_ANSI, 12);
+    printf("\033[H\033[J");
 }
 void goback(int x,int y)
 {
@@ -136,13 +138,16 @@ co = scandir(c.c_str(), &lis, NULL, alphasort);
     struct tm *mytm = localtime(&fileStat.st_mtime);
     char bf[100];
     strftime(bf, 18, "%I:%M:%S-%m/%d/%y", mytm);
-    s1=string(lis[i]->d_name)+" "+to_string(si)+" "+s1+" "+string(pw->pw_name)+" "+string(gr->gr_name)+" "+(string)bf;
-     
-     {  
-        //goback(1,10);
-        cout<<s1<<endl;
-     }
-     
+    s1=s1+" "+string(pw->pw_name)+" "+string(gr->gr_name)+" "+to_string(si)+" "+(string)bf+" "+string(lis[i]->d_name);
+    int l=s1.length();
+    pos();
+    int kk=w.ws_col;
+    kk=kk-1;
+    if(l>kk)
+    {
+        s1=s1.substr(0,kk);
+    }
+    cout<<s1<<endl;
      fflush(stdout);
      }}
     coun=coun-1;
@@ -200,9 +205,7 @@ if(ch==27)
 if(ch==65)
 {
             printf("\033[%dA",1);
-            //cout<<y;
             fflush(stdout);
-            
             if(y==inde&&inde!=0)
             {
             clearScreen();  
@@ -287,45 +290,43 @@ else if(ch==0x0A)
             inde=0;
             //string k="27"+".";
              if(s.compare("..")==0){
-            clearScreen();
+             clearScreen();
              back.push(p);
              size_t found = p.find_last_of("/\\");
              p=p.substr(0,found);
              inde=0;
-            lsfile(p,inde);
+             lsfile(p,inde);
              y=coun;
              printf("\033[%d;1H\n",y);
              fflush(stdout);
             }
-            else if(s.back()=='.')
+            else if(s==".")
             {
-           
-            clearScreen();
-           //  cout<<p;    
-           // fflush(stdout);
+            
+             clearScreen();
              back.push(p);
              inde=0;
-            lsfile(p,inde);
-            y=coun;
+             // size_t found = p.find_last_of("/\\");
+             // p=p.substr(0,found);
+             lsfile(p,inde);
+             y=coun;
              printf("\033[%d;1H\n",y);
-             //cout<<p<<"%%5";    
-           fflush(stdout);
+             //cout<<"@@@"<<p<<" "<<y<<" ";
              fflush(stdout);
             }
             else
             {
-
+            
             clearScreen();
-
             back.push(p);
             p=p+'/';
             p=p+lis[y]->d_name;
-             inde=0;
+            inde=0;
             lsfile(p,inde);
             y=coun;
-             printf("\033[%d;1H\n",y);
-           
-             fflush(stdout);
+            printf("\033[%d;1H\n",y);
+            //cout<<"####"<<endl;
+            fflush(stdout);
             }
             
         }
@@ -438,7 +439,6 @@ else
             read(0,&ch,1);
              //fflush(stdout);
             if(ch==8||ch==127){
-                //cout<<"cool1";
              clearScreen();
               inde=0;
               lsfile(p,inde);
