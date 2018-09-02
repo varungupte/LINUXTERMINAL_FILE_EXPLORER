@@ -211,12 +211,15 @@ if(ch==65)
             clearScreen();  
             inde=inde-1;  
             lsfile(p,inde);
-            y=coun;
-            printf("\033[%d;1H\n",y-inde);
+            y=inde;
+            printf("\033[%d;1H\n",0);
             fflush(stdout);
             }
-            else{
-            y=y-1;}
+            
+            else if(y!=0)
+            {
+                y=y-1;
+            }
         
 }
 else if(ch==66)
@@ -375,16 +378,22 @@ if(f[0]==27)
             inde=0;
             lsfile(p,inde);
             y=coun;
-             printf("\033[%d;1H\n",y);
-             fflush(stdout);
+            printf("\033[%d;1H\n",y);
+            fflush(stdout);
             break;
 }
 else
 {       
     
-        printf("\033[%dA",1);
+        //printf("\033[%dA",2);
+         clearScreen();
+        lsfile(p,inde);
+        y=coun;
+        
+        printf("\033[%d;1H\n",kk);
+        fflush(stdout);
         vector<string> vv; string word = "";
-        int l=f.length();int nowo;
+        int l=f.length();int nowo=0;
         //cout<<"string is ->"<<f;
         fflush(stdout);
         for (int i = 0; i<l; i++) {
@@ -396,7 +405,8 @@ else
          nowo=nowo+1; 
          vv.push_back(word);
         }
-        else {vv.push_back(word); word = "";}
+        else {vv.push_back(word); 
+            nowo=nowo+1; word = "";}
            
            }
         fflush(stdout);
@@ -451,27 +461,90 @@ else
          }
          else if(vv[0]=="copy")
          {
-						 struct stat s;
-						if( stat(vv[1].c_str(),&s) == 0 )
-						{
-						    if(s.st_mode & S_IFDIR )
-						    {
-						        copyDir(vv[1],vv[2]);
-						    }
-						    else if( s.st_mode & S_IFREG )
-						    {
+             //cout<<nowo;
+            //copyFile((string)vv[1],vv[2]);
+						//  struct stat s;
+						// if( stat(vv[1].c_str(),&s) == 0 )
+						//   {
+						//     if(s.st_mode & S_IFDIR )
+						//     {
+						//         copyDir(vv[1],vv[2]);
+						//     }
+						//     else if( s.st_mode & S_IFREG )
+						//     {
 						        
-						           for(int i=1;i<nowo-2;i++)
-						           {
-						           	copyFile((string)vv[i],vv[nowo-1]);
-						           }
+						//            for(int i=1;i<=nowo-2;i++)
+						//            {
+      //                               cout<<vv[i]<<vv[nowo-1]<<endl;
+						//            	copyFile((string)vv[i],vv[nowo-1]);
+						//            }
 						       
-						    }
-  }
+						//     }
+      //                     }
+            struct stat s;
+                        if( stat(vv[1].c_str(),&s) == 0 )
+                        {
+                            if(s.st_mode & S_IFDIR )
+                            {
+                                copyDir(vv[1],vv[2]);
+                            }
+                            else if( s.st_mode & S_IFREG )
+                            {
+                                
+                                   for(int i=1;i<nowo-1;i++)
+                                   {
+                                    copyFile((string)vv[i],vv[nowo-1]);
+                                   }
+                               
+                            }
          }
+         clearScreen();   
+             inde=0;
+            lsfile(home,inde); 
+            //lsfile(,0);
+            y=coun;
+             printf("\033[%d;1H\n",y);
+             fflush(stdout);
+            printf("\033[%d;1H\n",kk);
+     }
           else if(vv[0]=="move")
          {
-
+            
+            struct stat s;
+                        if( stat(vv[1].c_str(),&s) == 0 )
+                        {
+                            if(s.st_mode & S_IFDIR )
+                            {
+                                copyDir(vv[1],vv[2]);
+                                del(vv[1]);
+                            }
+                            else if( s.st_mode & S_IFREG )
+                            {
+                                
+                                   for(int i=1;i<nowo-1;i++)
+                                   {
+                                    copyFile((string)vv[i],vv[nowo-1]);
+                                    del(vv[i]);
+                                   }
+                               
+                            }
+               clearScreen();   
+             inde=0;
+            lsfile(home,inde); 
+            //lsfile(,0);
+            y=coun;
+             printf("\033[%d;1H\n",y);
+             fflush(stdout);
+            printf("\033[%d;1H\n",kk);             
+         }
+         clearScreen();   
+             inde=0;
+            lsfile(home,inde); 
+            //lsfile(,0);
+            y=coun;
+             printf("\033[%d;1H\n",y);
+             fflush(stdout);
+            printf("\033[%d;1H\n",kk);
          }
          else if(vv[0]=="rename")
          {
@@ -510,6 +583,14 @@ else
                         
                      }  
             close(fdDest);
+            clearScreen();   
+             inde=0;
+            lsfile(home,inde); 
+            //lsfile(,0);
+            y=coun;
+             printf("\033[%d;1H\n",y);
+             fflush(stdout);
+            printf("\033[%d;1H\n",kk);
          }
          else if(vv[0]=="create_dir")
          {  
@@ -529,6 +610,14 @@ else
                         c=p+"/"+vv[2]+"/"+vv[1];
                        }
                       int g= mkdir(c.c_str(),S_IRUSR|S_IWUSR|S_IXUSR);
+                      clearScreen();   
+             inde=0;
+            lsfile(home,inde); 
+            //lsfile(,0);
+            y=coun;
+             printf("\033[%d;1H\n",y);
+             fflush(stdout);
+            printf("\033[%d;1H\n",kk);
 
          }
          else if(vv[0]=="delete_file")
@@ -589,48 +678,6 @@ else
        }
 }
 }
-//     
-//         // if(vv[0]=="snapshot")
-//         //  {
-//         //         // int fdDest;
-//         //         // string e=p+"/"+vv[2];
-//         //         // if((fdDest=open(e.c_str(),O_CREAT|O_TRUNC|O_WRONLY,0664)) <0 )
-//         //         //          {
-//         //         //             cout<<"BAD OPEN @@%s\n"<<vv[2];
-                            
-//         //         //          } 
-//         //         //  string g=p+"/"+vv[1];         
-//         //         // listAllFiles(g,fdDest);
-//         //         // close(fdDest);
-
-//         //  }
-        
-
-      
-      
-//         fflush(stdout);
-//        }
-//        else if(ch!=27)
-//            {
-//            //printf("cool5555");
-//             f=f+ch;
-
-
-//            }
-//        else 
-//            {
-//             //ch=readch();
-//             //if(ch==10)
-//             //{
-//             tcsetattr(0, TCSANOW, &initial2);
-//             clearScreen();
-//             lsfile(p,0);
-//             y=coun+1;
-//             cout<<p<<endl;
-//             fflush(stdout);
-//             break;
-//            }
-   
 
 }
 }

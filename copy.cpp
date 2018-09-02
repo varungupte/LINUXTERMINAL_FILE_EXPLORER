@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <termios.h>
 #include <unistd.h>
-#include <fcntl.h>
 #include <dirent.h>
+#include<string.h>
+#include <fcntl.h>
+#include <string>
+#include <pwd.h>
+#include <grp.h>
 #include <sys/types.h>
-#include <sys/stat.h> 
-#include <bits/stdc++.h>
+#include <sys/ioctl.h>
+#include <sys/stat.h>
+#include<bits/stdc++.h>
+#include "alldef.h"
 using namespace std;
 
 // int main(int ac, char *av[])
@@ -44,27 +51,35 @@ umask(0);
   	         size_t found = a.find_last_of("/\\");
              na=a.substr(found+1,a.length()-1);
   }
+  else
+  {
+    na=a;
+  }
  b=b+"/"+na;
  //cout<<"@@"<<b<<"na->"<<na<<endl;
 if( stat(a.c_str(),&s) == 0 ){
 if ( (fdDest=open(b.c_str(),O_CREAT|O_TRUNC|O_WRONLY,(s.st_mode &S_IRWXU)|(s.st_mode &S_IRWXG)|(s.st_mode &S_IRWXO))) <0 )
          {
-            printf("BAD OPEN @@%s\n",a.c_str());
+            printf("BAD OPEN @@%s\n",b.c_str());
             return 1;
          }
          else
          {
-         	//cout<<b<<" opened";
+         	cout<<b<<" opened";
          }
 if ( (fdSrc=open(a.c_str(),O_RDONLY))<0 )
          {
-            printf("BAD OPEN %s\n",b.c_str());
+            printf("BAD OPEN %s\n",a.c_str());
             return 1;
+        }
+        else
+        {
+            cout<<a<<" opened";
         }
         char c;
  while (read(fdSrc,&c,1)==1)
          {
-         	// cout<<c;
+         	  //cout<<c;
             write(fdDest,&c,1);
          }
          close(fdSrc);
@@ -99,12 +114,31 @@ int copyDir(string source, string destination)
     struct stat s;
 if( stat(lis[i]->d_name,&s) == 0 && lis[i]->d_name!="." && lis[i]->d_name!="..")
 {
-    // if( s.st_mode & S_IFDIR )
-    // {
-    //     //string 
-    //     destination=destination+string(lis[i]->d_name);
-    //     copyDir(string(lis[i]->d_name),destination);
-    // }
+    if( s.st_mode & S_IFDIR )
+    {
+//         char cwd[10000];string curr;
+// if (getcwd(cwd,sizeof(cwd)) != NULL) {
+//       curr=cwd;
+//    } else {
+//        perror("getcwd() error");
+//        return 1;
+//    }
+//         //destination=destination+string(lis[i]->d_name);
+//         string c;
+//                        int fd;
+//                       if(destination[0]=='~')
+//                        {
+//                            size_t found = destination.find("~");
+//                            string kk=destination.substr(found+1);
+//                            c=curr+"/"+kk;
+//                        }
+//                        else
+//                        {
+//                         c=curr+"/"+destination;
+//                        }
+//                       int g= mkdir(c.c_str(),S_IRUSR|S_IWUSR|S_IXUSR);
+//         copyDir(string(lis[i]->d_name),destination);
+    }
     if( s.st_mode & S_IFREG )
     {
         
