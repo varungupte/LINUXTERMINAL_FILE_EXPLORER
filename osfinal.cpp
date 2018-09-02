@@ -401,14 +401,29 @@ else
         fflush(stdout);
         if(vv[0]=="snapshot")
          {
-                int fdDest;
+                int fdDest;string g;
+                if(vv[1]!=".")
+                {
                 string e=p+"/"+vv[2];
+
                 if((fdDest=open(e.c_str(),O_CREAT|O_TRUNC|O_WRONLY,0664)) <0 )
                          {
-                            cout<<"BAD OPEN @@%s\n"<<vv[2];
+                            //cout<<"BAD OPEN @@%s\n"<<vv[2];
                             
                          } 
-                string g=p+"/"+vv[1];         
+               g=p+"/"+vv[1];
+                }
+                else
+                {
+                    string e=p+"/"+vv[2];
+
+                if((fdDest=open(e.c_str(),O_CREAT|O_TRUNC|O_WRONLY,0664)) <0 )
+                         {
+                            //cout<<"BAD OPEN @@%s\n"<<vv[2];
+                            
+                         } 
+              g=p;
+                }         
                 listAllFiles(g,fdDest);
                 close(fdDest);
 
