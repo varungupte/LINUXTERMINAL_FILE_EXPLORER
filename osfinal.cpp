@@ -481,19 +481,44 @@ else
 						       
 						//     }
       //                     }
-            struct stat s;
+
+            
+                        struct stat s;string c;
                         if( stat(vv[1].c_str(),&s) == 0 )
                         {
                             if(s.st_mode & S_IFDIR )
                             {
-                                copyDir(vv[1],vv[2]);
+                                 if(vv[2][0]=='~'&&vv[2][1]=='/')
+                                   {
+                                       //size_t found = vv[2].find("~");
+                                       string kk=vv[2].substr(1);
+                                       c=home+"/"+kk;
+
+                                   }
+                           else
+                           {
+                            c=home+"/"+vv[2];
+                           }
+                           string g=home+"/"+vv[1];
+                           //cout<<c<<" "<<g;
+                                copyDir(g,c);
                             }
                             else if( s.st_mode & S_IFREG )
                             {
-                                
-                                   for(int i=1;i<nowo-1;i++)
+                                if(vv[nowo-1][0]=='~'&&vv[nowo-1][1]=='/')
                                    {
-                                    copyFile((string)vv[i],vv[nowo-1]);
+                                       size_t found = vv[nowo-1].find("~");
+                                       string kk=vv[nowo-1].substr(found+1);
+                                       c=home+"/"+kk;
+                                   }
+                           else
+                           {
+                            c=home+"/"+vv[nowo-1];
+                           }
+                           
+                                   for(int i=1;i<nowo-1;i++)
+                                   {string g=home+"/"+vv[i];
+                                    copyFile(g,c);
                                    }
                                
                             }
