@@ -534,11 +534,21 @@ else
          else if(vv[0]=="delete_file")
          {
             del(vv[1]);
+            clearScreen();
+              inde=0;
+              lsfile(p,inde);
+              y=coun;
+              printf("\033[%d;1H\n",kk);
             fflush(stdout);
          }
          else if(vv[0]=="delete_dir")
          {
             del(vv[1]);
+            clearScreen();
+              inde=0;
+              lsfile(p,inde);
+              y=coun;
+              printf("\033[%d;1H\n",kk);
             fflush(stdout);
          }
          else if(vv[0]=="goto")
