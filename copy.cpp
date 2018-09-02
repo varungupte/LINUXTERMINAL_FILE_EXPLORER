@@ -89,7 +89,7 @@ if ( (fdSrc=open(a.c_str(),O_RDONLY))<0 )
 }
 int copyDir(string source, string destination)
 {
-    
+    cout<<source<<"@@@@@@"<<destination<<"####"<<endl;
     struct dirent *de;  
     //cout<<source<<"----"<<destination<<endl;
     
@@ -110,27 +110,37 @@ int copyDir(string source, string destination)
     // cout<<co<<"@@@";
      struct stat st;
     for(int i=0; i<co;i++)
-    {
-          struct stat s; string k=string(lis[i]->d_name);
-          if( stat(lis[i]->d_name,&s) == 0 && k[0]!='.')
+    {    
+          struct stat s; string k=string(lis[i]->d_name);string sd,c;
+          //cout<<k<<endl;
+          string hh=source+"/"+k;
+          //string c=destination+"/"+k;
+          if( stat(hh.c_str(),&s) == 0)
           {
               
               if( s.st_mode & S_IFDIR )
               {
+                      
+                       if(string(lis[i]->d_name)=="."||string(lis[i]->d_name)=="..")   {
+                         //cout<<"@"<<endl;
+                        continue;
+                       }
+                       
                      string sd=source+"/"+k;
                      string c=destination+"/"+k;
-                     cout<<sd<<"@@@@@@"<<c<<"####"<<endl;
+                     //cout<<sd<<"@@@@@@"<<c<<"####"<<endl;
                      int g= mkdir(c.c_str(),S_IRUSR|S_IWUSR|S_IXUSR);
                      copyDir(sd,c);
               }
               if( s.st_mode & S_IFREG )
               {
-                  
+                  //cout<<"#$%"<<endl;
                      
                      	copyFile(string(lis[i]->d_name),destination);
                      
                  
               }
+              
            } 
 }
      closedir(dr);  
