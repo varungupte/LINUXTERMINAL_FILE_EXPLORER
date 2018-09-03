@@ -1,3 +1,5 @@
+//ROLL NUMBER:- 2018201003
+//NAME :- VARUN GUPTA
 #include <stdio.h>
 #include <stdlib.h>
 #include <termios.h>
@@ -32,6 +34,7 @@ int readch();
 int coun=0;
 int inde=0;
 int y;
+int number_rows=15;
 int co=0;
 string p;
 string getString(char x)
@@ -92,7 +95,7 @@ int lsfile(string c,int ind) //for listing of the files and directories present 
          exit(1);
      }
     struct stat fileStat;
-    for( int i=inde; i<ind+15;i++)
+    for( int i=inde; i<ind+number_rows;i++)
     {
             //printf("%s %d\n",lis[i]->d_name,i);
             if(i<co) 
@@ -219,9 +222,9 @@ int main()
                     //pos();
                     printf("\033[%dB",1);
                     fflush(stdout);
-                    if(y<co||y-inde+1<=15)
+                    if(y<co||y-inde+1<=number_rows)
                     {
-                        if(y==coun&&y-inde+1==15)
+                        if(y==coun&&y-inde+1==number_rows)
                         {
                             clearScreen();    
                             inde=inde+1;
