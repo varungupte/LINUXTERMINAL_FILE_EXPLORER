@@ -329,12 +329,17 @@ int main()
                           if( s.st_mode & S_IFREG )
                           {         
                                     //cout<<sd;
+                                    size_t found = string(lis[y]->d_name).find_last_of("/\\");
+                                    string cp=string(lis[y]->d_name).substr(found+1);
+                                    string ll=cp=p+"/"+cp;
                                     pid_t pid=fork();
                                     if(pid==0){
-                                    execl("/usr/bin/xdg-open","xdg-open",lis[y]->d_name,NULL);
+                                    execl("/usr/bin/xdg-open","xdg-open",ll.c_str(),NULL);
+                                    cout<<cp<<"@@";
+                                    cout<<ll<<endl;
                                     exit(0);}
                                     else{
-                                    lsfile(p,inde);
+                                    lsfile(p,inde);  
                                     y=coun;
                                     printf("\033[%d;1H\n",y);
                                     fflush(stdout);}
