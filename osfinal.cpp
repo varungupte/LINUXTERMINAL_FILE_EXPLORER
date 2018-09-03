@@ -139,7 +139,7 @@ co = scandir(c.c_str(), &lis, NULL, alphasort);
     struct tm *mytm = localtime(&fileStat.st_mtime);
     char bf[100];
     strftime(bf, 18, "%I:%M:%S-%m/%d/%y", mytm);
-    s1=s1+" "+string(pw->pw_name)+" "+string(gr->gr_name)+" "+to_string(si)+" "+(string)bf+" "+string(lis[i]->d_name);
+    s1=s1+" "+string(pw->pw_name)+" "+string(gr->gr_name)+" "+to_string(si)+"B"+" "+(string)bf+" "+string(lis[i]->d_name);
     int l=s1.length();
     pos();
     int kk=w.ws_col;
