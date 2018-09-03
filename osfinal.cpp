@@ -194,7 +194,7 @@ int main()
     {
             ch=readch();
             ch=readch();
-        if(ch==65)
+        if(ch==65)  //action when the up arrow is pressed
         {
                     printf("\033[%dA",1);
                     fflush(stdout);
@@ -214,7 +214,7 @@ int main()
                     }
                 
         }
-        else if(ch==66)
+        else if(ch==66) //action to be performed when down arrow is pressed
         {           
                     //pos();
                     printf("\033[%dB",1);
@@ -241,7 +241,7 @@ int main()
                     }
                   
         }
-        else if(ch==68)
+        else if(ch==68) //action to be performed when right arrow key is pressed
         {
                 if(!back.empty()) 
                      {
@@ -257,7 +257,7 @@ int main()
                     }
                
         }
-        else if(ch==67)
+        else if(ch==67) //action to be performed when the left arrow key is pressed
               {
                 if(!fo.empty()) 
                      {
@@ -275,7 +275,7 @@ int main()
             }
    }
 
-    else if(ch==0x0A)
+    else if(ch==0x0A) //action when the enter key is pressed
             {
                 string s=lis[y]->d_name;
                 inde=0;
@@ -347,7 +347,7 @@ int main()
                 
                }  
             }
-    else if(ch=='h'||ch=='H')
+    else if(ch=='h'||ch=='H') //action when the h key is pressed
     {
                 clearScreen();
                 p=home;
@@ -357,7 +357,7 @@ int main()
                 printf("\033[%d;1H\n",y);
                 fflush(stdout);
     }
-    else if(ch==8||ch==127)
+    else if(ch==8||ch==127) //action to be performed when the backspace key is pressed
     {
                 string s=lis[y]->d_name;
                 if(p.compare(home)!=0)
@@ -372,7 +372,7 @@ int main()
                     fflush(stdout);
             }
     } 
-    else if(ch==58)
+    else if(ch==58) //changing to command mode
     {
     static struct termios initial2,new2;
     tcgetattr(0,&initial2);
@@ -387,7 +387,7 @@ int main()
     getline(cin,f);
     if(f[0]==27)
     {
-        tcsetattr(0, TCSANOW, &initial2);
+        tcsetattr(0, TCSANOW, &initial2); //saving the settings of the non-canonical mode 
         clearScreen();
         inde=0;
         lsfile(p,inde);
@@ -407,7 +407,7 @@ int main()
         int l=f.length();int nowo=0;
             //cout<<"string is ->"<<f;
         fflush(stdout);
-        for (int i = 0; i<l; i++) 
+        for (int i = 0; i<l; i++) //splitting the command into differentiate between the source destination and command
         {
             if (f[i]!=' '&& i<l-1)
                 {
@@ -426,7 +426,7 @@ int main()
                
         }
         fflush(stdout);
-        if(vv[0]=="snapshot")
+        if(vv[0]=="snapshot") //Given a base directory this command should recursively crawl the directory and store the output in dumpfile.
             {
                     int fdDest;string g;
                     if(vv[1]!=".")
@@ -452,7 +452,7 @@ int main()
                     listAllFiles(g,fdDest);
                     close(fdDest);
             }
-        else if(vv[0]=="search")
+        else if(vv[0]=="search") //Search for the given filename under the current directory recursively.
             {  
                 string st=vv[1];
                 clearScreen();
@@ -473,7 +473,7 @@ int main()
                  //cout<<"cool12";
                 break;
              }
-        else if(vv[0]=="copy")
+        else if(vv[0]=="copy") //copying files and directories. File permissions and the ownership is intact.
             {
                  
                 struct stat s;string c;
@@ -541,7 +541,7 @@ int main()
             fflush(stdout);
             printf("\033[%d;1H\n",kk);
         }
-              else if(vv[0]=="move")
+              else if(vv[0]=="move") 
              {
                 
                 struct stat s;
@@ -623,7 +623,7 @@ int main()
                  fflush(stdout);
                 printf("\033[%d;1H\n",kk);
              }
-             else if(vv[0]=="rename")
+             else if(vv[0]=="rename") //renaming the file and directories
              {
              	int result= rename(vv[1].c_str(),vv[2].c_str());
              	clearScreen();   
@@ -669,7 +669,7 @@ int main()
                  fflush(stdout);
                 printf("\033[%d;1H\n",kk);
              }
-             else if(vv[0]=="create_dir")
+             else if(vv[0]=="create_dir") //creating directories
              {  
                         string c;
                            int fdDest;
@@ -697,51 +697,50 @@ int main()
                 printf("\033[%d;1H\n",kk);
 
              }
-             else if(vv[0]=="delete_file")
-             {
+             else if(vv[0]=="delete_file") //deleting file and adding it in the trash folder until file deleted from the trash folder
+            {
                 size_t found = vv[1].find("trash");
-                      if (found!=std::string::npos)
-                                    {
-                                               del(vv[1]);
-                                               clearScreen();
-                  inde=0;
-                  lsfile(p,inde);
-                  y=coun;
-                  //cout<<kkk<<" "<<cc<<" "<<m[cc];
-                  printf("\033[%d;1H\n",kk);
+                if (found!=std::string::npos)
+                    {
+                        del(vv[1]);
+                        clearScreen();
+                        inde=0;
+                        lsfile(p,inde);
+                        y=coun;
+                          //cout<<kkk<<" "<<cc<<" "<<m[cc];
+                        printf("\033[%d;1H\n",kk);
+                        fflush(stdout);
+                        continue;
+                    }
+                string c,cc,path;
+                if(vv[1][0]=='~'&&vv[1][1]=='/')
+                   {                             
+                        string kk=vv[1].substr(1);
+                        c=home+"/"+kk;
+                // cc=kk;
+                // path=home;
+                   }
+                else
+                  {
+                    c=home+"/"+vv[1];
+                   // cc=v[1];
+                   }  
+                found = c.find_last_of("/\\");
+                cc=c.substr(found+1,vv[1].length());
+                path=c.substr(0,found);
+                m[cc]=path;
+                string jj=home+"/trash";
+                copyFile(c,jj);
+                del(c);
+                clearScreen();
+                inde=0;
+                lsfile(p,inde);
+                y=coun;
+                      //cout<<cc<<"33"<<m[cc];
+                printf("\033[%d;1H\n",kk);
                 fflush(stdout);
-                   continue;
-                                    }
-         string c,cc,path;
-         if(vv[1][0]=='~'&&vv[1][1]=='/')
-          {
-                                         
-           string kk=vv[1].substr(1);
-            c=home+"/"+kk;
-            // cc=kk;
-            // path=home;
-             }
-             else
-              {
-               c=home+"/"+vv[1];
-               // cc=v[1];
-               }  
-                                                found = c.find_last_of("/\\");
-                                               cc=c.substr(found+1,vv[1].length());
-                                               path=c.substr(0,found);
-                                               m[cc]=path;
-                  string jj=home+"/trash";
-                  copyFile(c,jj);
-                  del(c);
-                  clearScreen();
-                  inde=0;
-                  lsfile(p,inde);
-                  y=coun;
-                  //cout<<cc<<"33"<<m[cc];
-                  printf("\033[%d;1H\n",kk);
-                fflush(stdout);
-             }
-             else if(vv[0]=="delete_dir")
+            }
+             else if(vv[0]=="delete_dir") //deleting directories and adding it in the trash folder until file deleted from the trash folder
              {
                 size_t found = vv[1].find("trash");
                 if (found!=std::string::npos)
@@ -796,7 +795,7 @@ int main()
                 printf("\033[%d;1H\n",kk);
                 fflush(stdout);
              }
-             else if(vv[0]=="restore")
+             else if(vv[0]=="restore") //restoring the files and directories from trash folder
              {    
                 auto it = m.find(vv[1]);
                 string jj=home+"/trash/"+vv[1];
@@ -832,7 +831,7 @@ int main()
              }
              
 
-             else if(vv[0]=="goto")
+             else if(vv[0]=="goto") //going to particular directoy and listing the files of that particular directory
              {
                     if(vv[1]=="/")
                     {
