@@ -542,7 +542,7 @@ int main()
                     }
             clearScreen();   
             inde=0;
-            lsfile(home,inde); 
+            lsfile(p,inde); 
                 //lsfile(,0);
             y=coun;
             printf("\033[%d;1H\n",y);
@@ -615,7 +615,7 @@ int main()
                                 }
                    clearScreen();   
                  inde=0;
-                lsfile(home,inde); 
+                lsfile(p,inde); 
                 //lsfile(,0);
                 y=coun;
                  printf("\033[%d;1H\n",y);
@@ -636,7 +636,7 @@ int main()
              	int result= rename(vv[1].c_str(),vv[2].c_str());
              	clearScreen();   
                  inde=0;
-                lsfile(home,inde); 
+                lsfile(p,inde); 
                 //lsfile(,0);
                 y=coun;
                  printf("\033[%d;1H\n",y);
@@ -670,7 +670,7 @@ int main()
                 close(fdDest);
                 clearScreen();   
                  inde=0;
-                lsfile(home,inde); 
+                lsfile(p,inde); 
                 //lsfile(,0);
                 y=coun;
                  printf("\033[%d;1H\n",y);
@@ -697,7 +697,7 @@ int main()
                           int g= mkdir(c.c_str(),S_IRUSR|S_IWUSR|S_IXUSR);
                           clearScreen();   
                  inde=0;
-                lsfile(home,inde); 
+                lsfile(p,inde); 
                 //lsfile(,0);
                 y=coun;
                  printf("\033[%d;1H\n",y);
