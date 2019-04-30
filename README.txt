@@ -23,6 +23,6 @@ To handle this, I storing the size of the terminal in a structure and the checki
 => ONLY 15 ROWS(at max.) will be shown in the terminal while doing ls.
 This can be changed,I have added a flag(variable) number_rows, which can be changed accordingly.
 
+=> SEARCH command:- 
+This will command will list the matching name files and mode will change from command to normal. On clicking backspace, you will be directed to the previous existing state of normal mode.
 
-
-=>  
